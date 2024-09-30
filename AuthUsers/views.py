@@ -1,11 +1,15 @@
 from django.shortcuts import render
-
-# Create your views here.
+from . import forms
+from django.contrib.auth import login, logout
 
 
 def Register(request):
-    return render(request, "Register.html")
+    page = "Register"
 
-
-def userLogin(request):
-    return render(request, "login.html")
+    if request.method == "POST":
+        form = forms.registration(request.POST)
+        if form.is_valid():
+            form.save()
+    else:
+        form = forms.registration()
+    return render(request, "Register.html", {"page": page, "form": form})
