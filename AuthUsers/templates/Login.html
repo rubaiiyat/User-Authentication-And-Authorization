@@ -1,5 +1,18 @@
 {% extends 'base.html' %}
-
+{% load crispy_forms_tags %}
 {% block content %}
-  <h1>Login page is working</h1>
+  <h1 class="text-cyan-500 text-center text-2xl mt-2">Login Your Account</h1>
+
+  <form method="post" class="max-w-sm mx-auto flex flex-col items-center">
+    {% csrf_token %}
+    <div class="w-full">
+      <!-- {{ form|crispy }} -->
+      {% for fm in form %}
+        <div class="mb-4">{{ fm.label_tag }}
+          {{ fm }}
+          {{ fm.errors }}</div>
+      {% endfor %}
+    </div>
+    <button class="btn btn-outline btn-info block mx-auto">Login</button>
+  </form>
 {% endblock %}

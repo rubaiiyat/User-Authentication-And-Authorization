@@ -3,7 +3,8 @@
 {% block content %}
   <h1 class="text-cyan-500 text-center text-2xl mt-2">Create Your Account</h1>
 
-  <form class="max-w-sm mx-auto flex flex-col items-center">
+  <form method="post" class="max-w-sm mx-auto flex flex-col items-center">
+    {% csrf_token %}
     <div class="w-full">
       <!-- {{ form|crispy }} -->
       {% for fm in form %}

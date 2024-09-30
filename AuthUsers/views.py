@@ -1,15 +1,53 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from . import forms
-from django.contrib.auth import login, logout
+from django.contrib.auth import login, logout, authenticate
+from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.decorators import login_required
 
 
 def Register(request):
-    page = "Register"
+    if not request.user.is_authenticated:
+        page = "Register"
 
-    if request.method == "POST":
-        form = forms.registration(request.POST)
-        if form.is_valid():
-            form.save()
+        if request.method == "POST":
+            form = forms.registration(request.POST)
+            if form.is_valid():
+                form.save()
+                return redirect("register")
+        else:
+            form = forms.registration()
+        return render(request, "Register.html", {"page": page, "form": form})
     else:
-        form = forms.registration()
-    return render(request, "Register.html", {"page": page, "form": form})
+        return redirect("profile")
+
+
+def userLogin(request):
+    if not request.user.is_authenticated:
+        page = "Login"
+        if request.method == "POST":
+            form = AuthenticationForm(request.POST)
+            name = request.POST["username"]
+            userPass = request.POST["password"]
+            user = authenticate(request, username=name, password=userPass)
+
+            if user is not None:
+                login(request, user)
+                return redirect("profile")
+        else:
+            form = AuthenticationForm()
+
+        return render(request, "login.html", {"page": page, "form": form})
+    else:
+        return redirect("profile")
+
+
+@login_required
+def userProfile(request):
+    return render(request, "profile.html")
+
+
+@login_required
+def userLogout(request):
+    logout(request)
+
+    return redirect("home")
