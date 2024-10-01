@@ -36,6 +36,11 @@
         </ul>
       </nav>
     </header>
+    {% if messages %}
+      {% for m in messages %}
+        <h1 class="text-{{ m.tags }} text-center m-5">{{ m }}</h1>
+      {% endfor %}
+    {% endif %}
     {% block content %}
 
     {% endblock %}

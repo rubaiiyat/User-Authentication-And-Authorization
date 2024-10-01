@@ -7,7 +7,7 @@ from django.contrib.auth.forms import (
     SetPasswordForm,
 )
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.models import User
+from django.contrib import messages
 
 
 def Register(request):
@@ -17,6 +17,7 @@ def Register(request):
         if request.method == "POST":
             form = forms.registration(request.POST)
             if form.is_valid():
+                messages.success(request, "Account Created Successfully")
                 form.save()
                 return redirect("register")
         else:
@@ -36,8 +37,12 @@ def userLogin(request):
             user = authenticate(request, username=name, password=userPass)
 
             if user is not None:
+                messages.success(request, "Logged In Successfully")
                 login(request, user)
                 return redirect("profile")
+            else:
+                messages.warning(request, "Invalid Username or Password")
+
         else:
             form = AuthenticationForm()
 
@@ -58,7 +63,7 @@ def editProfile(request):
     if request.method == "POST":
         form = forms.updateProfile(request.POST, instance=request.user)
         if form.is_valid():
-
+            messages.success(request, "Updated Profile Successfully")
             form.save()
             return redirect("profile")
     else:
@@ -73,7 +78,7 @@ def chngPass(request):
         if form.is_valid():
             form.save()
             update_session_auth_hash(request, request.user)
-
+            messages.success(request, "Updated Password Successfully")
             return redirect("profile")
     else:
         form = PasswordChangeForm(request.user)
@@ -88,7 +93,7 @@ def chngPass2(request):
         if form.is_valid():
             form.save()
             update_session_auth_hash(request, request.user)
-
+            messages.success(request, "Updated Password Successfully")
             return redirect("profile")
     else:
         form = SetPasswordForm(request.user)
@@ -98,6 +103,7 @@ def chngPass2(request):
 
 @login_required
 def userLogout(request):
+    messages.success(request, "Logged Out Successfully")
     logout(request)
 
     return redirect("home")
