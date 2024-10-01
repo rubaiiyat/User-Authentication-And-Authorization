@@ -7,5 +7,6 @@ urlpatterns = [
     path("profile/", views.userProfile, name="profile"),
     path("profile/edit/", views.editProfile, name="edit_profile"),
     path("profile/changepassword/", views.chngPass, name="chngpass"),
+    path("profile/changepassword2/", views.chngPass2, name="chngpass2"),
     path("logout/", views.userLogout, name="logout"),
 ]

@@ -1,7 +1,11 @@
 from django.shortcuts import render, redirect
 from . import forms
 from django.contrib.auth import login, logout, authenticate, update_session_auth_hash
-from django.contrib.auth.forms import AuthenticationForm, PasswordChangeForm
+from django.contrib.auth.forms import (
+    AuthenticationForm,
+    PasswordChangeForm,
+    SetPasswordForm,
+)
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 
@@ -73,6 +77,21 @@ def chngPass(request):
             return redirect("profile")
     else:
         form = PasswordChangeForm(request.user)
+
+    return render(request, "chngPass.html", {"form": form})
+
+
+@login_required
+def chngPass2(request):
+    if request.method == "POST":
+        form = SetPasswordForm(request.user, request.POST)
+        if form.is_valid():
+            form.save()
+            update_session_auth_hash(request, request.user)
+
+            return redirect("profile")
+    else:
+        form = SetPasswordForm(request.user)
 
     return render(request, "chngPass.html", {"form": form})
 
