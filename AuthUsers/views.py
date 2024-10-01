@@ -51,7 +51,14 @@ def userProfile(request):
 
 @login_required
 def editProfile(request):
-    return render(request, "Edit_Profile.html")
+    if request.method == "POST":
+        form = forms.updateProfile(request.POST, instance=request.user)
+        if form.is_valid():
+            form.save()
+            return redirect("profile")
+    else:
+        form = forms.updateProfile(instance=request.user)
+    return render(request, "Edit_Profile.html", {"form": form})
 
 
 @login_required
